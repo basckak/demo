@@ -9,30 +9,31 @@
     body, html { margin: 0; padding: 0; height: 100%; }
     #container { display: grid; grid-template-rows: 60px 1fr 40px; grid-template-columns: 200px 1fr; height: 100%; }
     header { grid-column: 1 / span 2; background: #ffe4e1; display: flex; align-items: center; justify-content: center; position: relative; }
+    #heart { position: absolute; top: 10px; left: 10px; font-size: 24px; color: #d147a3; cursor: pointer; }
     nav { background: #fff0f5; padding: 10px; }
     nav a { display: block; margin-bottom: 8px; text-decoration: none; color: #333; }
     main { padding: 10px; overflow: auto; }
     footer { grid-column: 1 / span 2; background: #ffe4e1; display: flex; align-items: center; justify-content: center; }
     iframe { width: 100%; height: 100%; border: none; }
-    h1 { color: #d147a3; font-family: 'Arial', sans-serif; }
-    #heart { position: absolute; top: 10px; left: 10px; font-size: 24px; color: #d147a3; cursor: pointer; }
+    h1, h2 { color: #d147a3; font-family: Arial, sans-serif; }
   </style>
 </head>
 <body>
   <div id="container">
     <header>
-      <div id="heart" onclick="alert('я тебя люблю')">❤️</div>
-      <h1>С днём рождения, лапа!</h1>
+      <div id="heart" onclick="alert('- и я тебя люблю, jmnjm')">❤️</div>
+      <h1>Happy Birthday, Paw!</h1>
     </header>
     <nav>
-      <a href="home.html" target="contentFrame">Главная</a>
-      <a href="gallery.html" target="contentFrame">Галерея</a>
-      <a href="wish.html" target="contentFrame">Пожелания</a>
+      <a href="home.html" target="contentFrame">Boarding Pass</a>
+      <a href="selection.html" target="contentFrame">Куда полетим?</a>
+      <a href="gallery.html" target="contentFrame">Наши фоточки</a>
+      <a href="wish.html" target="contentFrame">Best Wishes</a>
     </nav>
     <main>
       <iframe name="contentFrame" src="home.html"></iframe>
     </main>
-    <footer>Создано с любовью</footer>
+    <footer>made for nyamkeeeens only!</footer>
   </div>
 </body>
 </html>
