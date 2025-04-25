@@ -1,0 +1,77 @@
+<!-- quiz.html -->
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Кто на фото?</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    h2 { color: #d147a3; }
+    .question { margin-bottom: 20px; }
+    .question img { max-width: 100%; height: auto; border-radius: 8px; }
+    .options label { display: block; margin: 5px 0; padding: 5px; border-radius: 4px; cursor: pointer; }
+    .correct { background-color: #c8e6c9; }
+    .wrong { background-color: #ffcdd2; }
+    input { margin-right: 8px; }
+  </style>
+</head>
+<body>
+  <h2>Кто на фото?</h2>
+  <div class="question" data-answer="D">
+    <img src="quiz1.jpg" alt="Фото 1">
+    <div class="options">
+      <label><input type="radio" name="q1" value="A"> Adut Akech</label>
+      <label><input type="radio" name="q1" value="B"> Paloma Elsesser</label>
+      <label><input type="radio" name="q1" value="C"> Gigi Hadid</label>
+      <label><input type="radio" name="q1" value="D"> Kaia Gerber</label>
+    </div>
+  </div>
+  <div class="question" data-answer="A">
+    <img src="quiz2.jpg" alt="Фото 2">
+    <div class="options">
+      <label><input type="radio" name="q2" value="A"> Ashley Graham</label>
+      <label><input type="radio" name="q2" value="B"> Tess Holliday</label>
+      <label><input type="radio" name="q2" value="C"> Paloma Elsesser</label>
+      <label><input type="radio" name="q2" value="D"> Precious Lee</label>
+    </div>
+  </div>
+  <div class="question" data-answer="B">
+    <img src="quiz3.jpg" alt="Фото 3">
+    <div class="options">
+      <label><input type="radio" name="q3" value="A"> Bella Hadid</label>
+      <label><input type="radio" name="q3" value="B"> Kaia Gerber</label>
+      <label><input type="radio" name="q3" value="C"> Kendall Jenner</label>
+      <label><input type="radio" name="q3" value="D"> Adwoa Aboah</label>
+    </div>
+  </div>
+  <div class="question" data-answer="D">
+    <img src="quiz4.jpg" alt="Фото 4">
+    <div class="options">
+      <label><input type="radio" name="q4" value="A"> Lea T.</label>
+      <label><input type="radio" name="q4" value="B"> Andreja Pejić</label>
+      <label><input type="radio" name="q4" value="C"> Teddy Quinlivan</label>
+      <label><input type="radio" name="q4" value="D"> Valentina Sampaio</label>
+    </div>
+  </div>
+  <div class="question" data-answer="B">
+    <img src="quiz5.jpg" alt="Фото 5">
+    <div class="options">
+      <label><input type="radio" name="q5" value="A"> Adut Akech</label>
+      <label><input type="radio" name="q5" value="B"> Gigi Hadid</label>
+      <label><input type="radio" name="q5" value="C"> Anok Yai</label>
+      <label><input type="radio" name="q5" value="D"> Vittoria Ceretti</label>
+    </div>
+  </div>
+  <script>
+    document.querySelectorAll('.question').forEach(q => {
+      q.querySelectorAll('input').forEach(input => input.addEventListener('change', () => {
+        const correct = q.getAttribute('data-answer');
+        q.querySelectorAll('label').forEach(label => label.classList.remove('correct','wrong'));
+        const selected = q.querySelector('input:checked').value;
+        const label = q.querySelector(`input[value="${selected}"]`).parentElement;
+        label.classList.add(selected === correct ? 'correct' : 'wrong');
+      }));
+    });
+  </script>
+</body>
+</html>
