@@ -1,5 +1,35 @@
 <!DOCTYPE html>
 <html lang="ru">
-<head><meta charset="UTF-8"><title>Галерея</title></head>
-<body><h2>Фото</h2><p>Здесь будут наши совместные фотографии.</p></body>
+<head><meta charset="UTF-8"><title>Главная</title></head>
+<body><h2>Добро пожаловать!</h2><p>Это подарок специально для тебя.</p></body>
+</html>
+
+<!-- gallery.html -->
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Галерея</title>
+  <style>
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 10px;
+      padding: 0;
+      list-style: none;
+    }
+    .gallery img {
+      width: 100%;
+      height: auto;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Фото</h2>
+  <div class="gallery">
+    <img src="images/IMG_6890.JPG" alt="Фото 1">
+    <!-- Добавляйте другие изображения точно так же -->
+  </div>
+</body>
 </html>
