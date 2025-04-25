@@ -1,29 +1,66 @@
-
+<!-- gallery.html -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <title>Галерея</title>
+  <title>Наши фоточки</title>
   <style>
-    .gallery {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-      gap: 10px;
-      padding: 0;
-      list-style: none;
-    }
-    .gallery img {
-      width: 100%;
-      height: auto;
-      border-radius: 6px;
-    }
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    h1, h2 { color: #d147a3; font-family: Arial, sans-serif; margin-bottom: 10px; }
+    .tabs { display: flex; gap: 10px; margin-bottom: 20px; }
+    .tab { cursor: pointer; border-radius: 8px; overflow: hidden; border: 2px solid transparent; }
+    .tab.active { border-color: #d147a3; }
+    .tab img { display: block; width: 60px; height: 60px; object-fit: cover; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+    .gallery-grid img { width: 100%; border-radius: 6px; }
   </style>
 </head>
 <body>
-  <h2>Фото</h2>
-  <div class="gallery">
-    <img src="IMG_6890.JPG" alt="Фото 1">
-    <!-- Добавляйте другие изображения точно так же -->
+  <h2>Наши фоточки</h2>
+  <div class="tabs">
+    <div class="tab active" data-tab="me-paw"><img src="me_paw_thumb.jpg" alt="me & paw"></div>
+    <div class="tab" data-tab="model-paw"><img src="model_paw_thumb.jpg" alt="model paw"></div>
+    <div class="tab" data-tab="paw-fam"><img src="paw_fam_thumb.jpg" alt="paw & fam"></div>
+    <div class="tab" data-tab="paw-friends"><img src="paw_friends_thumb.jpg" alt="paw & freinds"></div>
   </div>
+  <div id="me-paw" class="tab-content active">
+    <div class="gallery-grid">
+      <!-- Добавь сюда фото "me & paw" -->
+      <img src="me_paw1.jpg" alt="Me & Paw 1">
+      <img src="me_paw2.jpg" alt="Me & Paw 2">
+    </div>
+  </div>
+  <div id="model-paw" class="tab-content">
+    <div class="gallery-grid">
+      <!-- Добавь сюда фото "model paw" -->
+      <img src="model_paw1.jpg" alt="Model Paw 1">
+      <img src="model_paw2.jpg" alt="Model Paw 2">
+    </div>
+  </div>
+  <div id="paw-fam" class="tab-content">
+    <div class="gallery-grid">
+      <!-- Добавь сюда фото "paw & fam" -->
+      <img src="paw_fam1.jpg" alt="Paw & Fam 1">
+      <img src="paw_fam2.jpg" alt="Paw & Fam 2">
+    </div>
+  </div>
+  <div id="paw-friends" class="tab-content">
+    <div class="gallery-grid">
+      <!-- Добавь сюда фото "paw & freinds" -->
+      <img src="paw_friends1.jpg" alt="Paw & Friends 1">
+      <img src="paw_friends2.jpg" alt="Paw & Friends 2">
+    </div>
+  </div>
+  <script>
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.tab, .tab-content').forEach(el => el.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById(tab.getAttribute('data-tab')).classList.add('active');
+      });
+    });
+  </script>
 </body>
 </html>
