@@ -14,6 +14,7 @@
     .correct { background-color: #c8e6c9; }
     .wrong { background-color: #ffcdd2; }
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
 </head>
 <body>
   <h2>Кто на фото?</h2>
@@ -73,13 +74,23 @@
   </div>
 
   <script>
-    document.querySelectorAll('.question').forEach(q => {
+    const questions = document.querySelectorAll('.question');
+    const total = questions.length;
+    questions.forEach(q => {
       q.querySelectorAll('input').forEach(input => input.addEventListener('change', () => {
         const correct = q.getAttribute('data-answer');
         q.querySelectorAll('label').forEach(label => label.classList.remove('correct','wrong'));
         const selected = q.querySelector('input:checked').value;
         const label = q.querySelector(`input[value="${selected}"]`).parentElement;
         label.classList.add(selected === correct ? 'correct' : 'wrong');
+        // Проверка всех ответов
+        const answered = Array.from(questions).filter(q => q.querySelector('input:checked')).length;
+        if(answered === total) {
+          const allCorrect = Array.from(questions).every(q => q.querySelector('input:checked').value === q.getAttribute('data-answer'));
+          if(allCorrect) {
+            confetti();
+          }
+        }
       }));
     });
   </script>
