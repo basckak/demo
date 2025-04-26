@@ -1,4 +1,3 @@
-<!-- gallery.html -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -6,13 +5,15 @@
   <title>Наши фоточки</title>
   <style>
     body { font-family: Arial, sans-serif; padding: 20px; }
-    h1, h2 { color: #d147a3; font-family: Arial, sans-serif; margin-bottom: 10px; }
+    h2, h3 { color: #d147a3; font-family: Arial, sans-serif; margin-bottom: 10px; }
     .tabs { display: flex; gap: 10px; margin-bottom: 20px; }
     .tab { cursor: pointer; border-radius: 8px; overflow: hidden; border: 2px solid transparent; }
     .tab.active { border-color: #d147a3; }
     .tab img { display: block; width: 60px; height: 60px; object-fit: cover; }
     .tab-content { display: none; }
     .tab-content.active { display: block; }
+    .cover { margin-bottom: 15px; }
+    .cover img { width: 100%; max-height: 300px; object-fit: cover; border-radius: 6px; }
     .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
     .gallery-grid img { width: 100%; border-radius: 6px; }
   </style>
@@ -20,39 +21,71 @@
 <body>
   <h2>Наши фоточки</h2>
   <div class="tabs">
-    <div class="tab active" data-tab="me-paw"><img src="me_paw_thumb.jpg" alt="me & paw"></div>
-    <div class="tab" data-tab="model-paw"><img src="model_paw_thumb.jpg" alt="model paw"></div>
-    <div class="tab" data-tab="paw-fam"><img src="paw_fam_thumb.jpg" alt="paw & fam"></div>
-    <div class="tab" data-tab="paw-friends"><img src="paw_friends_thumb.jpg" alt="paw & freinds"></div>
+    <div class="tab active" data-tab="me-paw"><img src="IMG_8048.PNG" alt="Me & Paw"></div>
+    <div class="tab" data-tab="model-paw"><img src="IMG_6214.JPG" alt="Model Paw"></div>
+    <div class="tab" data-tab="cute-paw"><img src="IMG_6317.jpeg" alt="Cute Paw"></div>
+    <div class="tab" data-tab="paw-friends"><img src="IMG_1397.jpeg" alt="Paw & Friends"></div>
   </div>
+
   <div id="me-paw" class="tab-content active">
+    <h3>Me & Paw</h3>
+    <div class="cover">
+      <img src="IMG_8048.PNG" alt="Cover Me & Paw">
+    </div>
     <div class="gallery-grid">
-      <!-- Добавь сюда фото "me & paw" -->
-      <img src="me_paw1.jpg" alt="Me & Paw 1">
-      <img src="me_paw2.jpg" alt="Me & Paw 2">
+      <img src="IMG_8049.PNG" alt="Me & Paw 2">
+      <img src="IMG_8551.PNG" alt="Me & Paw 3">
+      <img src="IMG_2497.JPG" alt="Me & Paw 4">
+      <img src="IMG_3648.jpeg" alt="Me & Paw 5">
     </div>
   </div>
+
   <div id="model-paw" class="tab-content">
+    <h3>Model Paw</h3>
+    <div class="cover">
+      <img src="IMG_6214.JPG" alt="Cover Model Paw">
+    </div>
     <div class="gallery-grid">
-      <!-- Добавь сюда фото "model paw" -->
-      <img src="model_paw1.jpg" alt="Model Paw 1">
-      <img src="model_paw2.jpg" alt="Model Paw 2">
+      <img src="IMG_6226.JPG" alt="Model Paw 2">
+      <img src="IMG_6247.JPG" alt="Model Paw 3">
+      <img src="IMG_6622.jpeg" alt="Model Paw 4">
+      <img src="IMG_6635 2.jpeg" alt="Model Paw 5">
+      <img src="IMG_6635.jpeg" alt="Model Paw 6">
     </div>
   </div>
-  <div id="paw-fam" class="tab-content">
+
+  <div id="cute-paw" class="tab-content">
+    <h3>Cute Paw</h3>
+    <div class="cover">
+      <img src="IMG_6317.jpeg" alt="Cover Cute Paw">
+    </div>
     <div class="gallery-grid">
-      <!-- Добавь сюда фото "paw & fam" -->
-      <img src="paw_fam1.jpg" alt="Paw & Fam 1">
-      <img src="paw_fam2.jpg" alt="Paw & Fam 2">
+      <img src="IMG_5472.jpeg" alt="Cute Paw 2">
+      <img src="IMG_4434.jpeg" alt="Cute Paw 3">
+      <img src="IMG_3415.jpeg" alt="Cute Paw 4">
+      <img src="IMG_3030.jpeg" alt="Cute Paw 5">
+      <img src="IMG_1662.JPG" alt="Cute Paw 6">
+      <img src="IMG_1362.jpeg" alt="Cute Paw 7">
+      <img src="IMG_0921.jpeg" alt="Cute Paw 8">
+      <img src="IMG_1089.jpeg" alt="Cute Paw 9">
     </div>
   </div>
+
   <div id="paw-friends" class="tab-content">
+    <h3>Paw & Friends</h3>
+    <div class="cover">
+      <img src="IMG_1397.jpeg" alt="Cover Paw & Friends">
+    </div>
     <div class="gallery-grid">
-      <!-- Добавь сюда фото "paw & freinds" -->
-      <img src="paw_friends1.jpg" alt="Paw & Friends 1">
-      <img src="paw_friends2.jpg" alt="Paw & Friends 2">
+      <img src="IMG_1810.jpeg" alt="Paw & Friends 2">
+      <img src="IMG_2229.JPG" alt="Paw & Friends 3">
+      <img src="IMG_2429.jpeg" alt="Paw & Friends 4">
+      <img src="IMG_3987.jpeg" alt="Paw & Friends 5">
+      <img src="IMG_6285.jpeg" alt="Paw & Friends 6">
+      <img src="IMG_6305.JPG" alt="Paw & Friends 7">
     </div>
   </div>
+
   <script>
     document.querySelectorAll('.tab').forEach(tab => {
       tab.addEventListener('click', () => {
