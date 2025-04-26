@@ -1,19 +1,45 @@
-<!-- ticket_front.html -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <title>Передняя сторона талона</title>
+  <title>Передняя сторона билета</title>
   <style>
-    body { font-family: Arial, sans-serif; padding: 10px; text-align: center; }
-    img { max-width: 100%; height: auto; margin-bottom: 10px; border-radius: 6px; }
-    h2 { color: #d147a3; }
-    p { font-size: 1.1em; }
+    h2, h1 { color: #d147a3; font-family: Arial, sans-serif; }
+    body { font-family: Arial, sans-serif; padding: 20px; text-align: center; }
+    .cover { margin-bottom: 15px; }
+    .cover img { max-width: 100%; height: auto; border-radius: 6px; }
+    #flight-info { margin: 15px 0; text-align: left; display: inline-block; }
+    #flight-info h3 { margin-bottom: 5px; }
+    p.link { margin-top: 20px; }
+    a { color: #d147a3; text-decoration: none; font-weight: bold; }
+    a:hover { text-decoration: underline; }
   </style>
 </head>
 <body>
-  <h2>Твой посадочный талон</h2>
-  <img src="photo_2025-04-25%2017.47.17.jpeg" alt="Передняя сторона талона">
-  <p>Я тебя люблю!</p>
+  <h2>Твой билет</h2>
+  <div class="cover">
+    <img src="photo_2025-04-25%2017.47.17.jpeg" alt="Передняя сторона билета">
+  </div>
+
+  <div id="flight-info">
+    <h3>Информация по вылету:</h3>
+    <p>
+      Направление: <span id="dir"></span><br>
+      Дата: <span id="date"></span><br>
+      Пассажиров: <span id="pax"></span>
+    </p>
+  </div>
+
+  <p class="link">
+    <a href="map.html" target="_self">И что мы будем там делать?</a>
+  </p>
+
+  <script>
+    // Забираем данные из URL и подставляем в блок flight-info
+    const params = new URLSearchParams(location.search);
+    document.getElementById('dir').textContent = params.get('direction') || '—';
+    document.getElementById('date').textContent = params.get('date') || '—';
+    document.getElementById('pax').textContent = params.get('passengers') || '—';
+  </script>
 </body>
 </html>
