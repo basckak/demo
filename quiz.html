@@ -10,15 +10,16 @@
     .question { margin-bottom: 20px; }
     .question img { max-width: 100%; height: auto; border-radius: 8px; }
     .options label { display: block; margin: 5px 0; padding: 5px; border-radius: 4px; cursor: pointer; }
+    .options input { margin-right: 8px; }
     .correct { background-color: #c8e6c9; }
     .wrong { background-color: #ffcdd2; }
-    input { margin-right: 8px; }
   </style>
 </head>
 <body>
   <h2>Кто на фото?</h2>
+  <!-- Вопрос 1 -->
   <div class="question" data-answer="D">
-    <img src="quiz1.jpg" alt="Фото 1">
+    <img src="GettyImages-1185978240.jpg.webp" alt="Фото 1">
     <div class="options">
       <label><input type="radio" name="q1" value="A"> Adut Akech</label>
       <label><input type="radio" name="q1" value="B"> Paloma Elsesser</label>
@@ -26,8 +27,10 @@
       <label><input type="radio" name="q1" value="D"> Kaia Gerber</label>
     </div>
   </div>
-  <div class="question" data-answer="A">
-    <img src="quiz2.jpg" alt="Фото 2">
+
+  <!-- Вопрос 2 -->
+  <div class="question" data-answer="C">
+    <img src="large-1685466537-7d2e11abd7dce5f2b9d7b4744aea6b3f.jpg" alt="Фото 2">
     <div class="options">
       <label><input type="radio" name="q2" value="A"> Ashley Graham</label>
       <label><input type="radio" name="q2" value="B"> Tess Holliday</label>
@@ -35,17 +38,21 @@
       <label><input type="radio" name="q2" value="D"> Precious Lee</label>
     </div>
   </div>
+
+  <!-- Вопрос 3 -->
   <div class="question" data-answer="B">
-    <img src="quiz3.jpg" alt="Фото 3">
+    <img src="Gigi-Hadid-Victorias-Secret-Carpet-GettyImages-1664651571-H-2023.jpg.webp" alt="Фото 3">
     <div class="options">
-      <label><input type="radio" name="q3" value="A"> Bella Hadid</label>
-      <label><input type="radio" name="q3" value="B"> Kaia Gerber</label>
-      <label><input type="radio" name="q3" value="C"> Kendall Jenner</label>
-      <label><input type="radio" name="q3" value="D"> Adwoa Aboah</label>
+      <label><input type="radio" name="q3" value="A"> Adut Akech</label>
+      <label><input type="radio" name="q3" value="B"> Gigi Hadid</label>
+      <label><input type="radio" name="q3" value="C"> Anok Yai</label>
+      <label><input type="radio" name="q3" value="D"> Vittoria Ceretti</label>
     </div>
   </div>
+
+  <!-- Вопрос 4 -->
   <div class="question" data-answer="D">
-    <img src="quiz4.jpg" alt="Фото 4">
+    <img src="Valentina-Sampaio.jpg.webp" alt="Фото 4">
     <div class="options">
       <label><input type="radio" name="q4" value="A"> Lea T.</label>
       <label><input type="radio" name="q4" value="B"> Andreja Pejić</label>
@@ -53,15 +60,18 @@
       <label><input type="radio" name="q4" value="D"> Valentina Sampaio</label>
     </div>
   </div>
-  <div class="question" data-answer="B">
-    <img src="quiz5.jpg" alt="Фото 5">
+
+  <!-- Вопрос 5 для Arina -->
+  <div class="question" data-answer="A">
+    <img src="IMG_6243.JPG" alt="Фото 5">
     <div class="options">
-      <label><input type="radio" name="q5" value="A"> Adut Akech</label>
-      <label><input type="radio" name="q5" value="B"> Gigi Hadid</label>
-      <label><input type="radio" name="q5" value="C"> Anok Yai</label>
-      <label><input type="radio" name="q5" value="D"> Vittoria Ceretti</label>
+      <label><input type="radio" name="q5" value="A"> Koroleva Arina</label>
+      <label><input type="radio" name="q5" value="B"> Kaia Gerber</label>
+      <label><input type="radio" name="q5" value="C"> Gigi Hadid</label>
+      <label><input type="radio" name="q5" value="D"> Paloma Elsesser</label>
     </div>
   </div>
+
   <script>
     document.querySelectorAll('.question').forEach(q => {
       q.querySelectorAll('input').forEach(input => input.addEventListener('change', () => {
