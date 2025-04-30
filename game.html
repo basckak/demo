@@ -22,10 +22,6 @@
     const rail = new Image(); rail.src = 'pngtree-clothes-on-a-rack-buy-picture-image_13151407.png';
     const money = new Image(); money.src = 'Dollar-Money-PNG-Image.png';
 
-    // Размеры предметов
-    const obstacleSize = { w: 80, h: 60 };
-    const collectibleSize = { w: 50, h: 50 };
-
     // Параметры героя
     const player = { x: 50, y: HEIGHT - 80, w: 60, h: 60, vy: 0, gravity: 1.2, jumpPower: -15 };
     let obstacles = [];
@@ -42,44 +38,35 @@
     // Обновление игры
     function update() {
       frame++;
-      // Гравитация
+      // Применяем гравитацию
       player.vy += player.gravity;
       player.y = Math.min(player.y + player.vy, HEIGHT - player.h - 5);
 
       // Создание препятствий
       if (frame % 120 === 0) {
-        obstacles.push({
-          x: WIDTH,
-          y: HEIGHT - obstacleSize.h - 5,
-          w: obstacleSize.w,
-          h: obstacleSize.h
-        });
+        obstacles.push({ x: WIDTH, y: HEIGHT - 70, w: 50, h: 40 });
       }
-      // Создание коллектиблов (деньги ниже)
+      // Создание коллектиблов
       if (frame % 180 === 0) {
-        collectibles.push({
-          x: WIDTH,
-          y: Math.random() * 50 + (HEIGHT - 150), // между 250 и 300
-          w: collectibleSize.w,
-          h: collectibleSize.h
-        });
+        collectibles.push({ x: WIDTH, y: Math.random()*200+50, w: 30, h: 30 });
       }
 
       // Сдвигаем объекты
-      obstacles = obstacles.map(o => ({ x: o.x - 4, ...o })).filter(o => o.x + o.w > 0);
-      collectibles = collectibles.map(c => ({ x: c.x - 4, ...c })).filter(c => c.x + c.w > 0);
+      obstacles = obstacles.map(o => ({ ...o, x: o.x - 4 })).filter(o => o.x + o.w > 0);
+      collectibles = collectibles.map(c => ({ ...c, x: c.x - 4 })).filter(c => c.x + c.w > 0);
 
-      // В будущем можно добавить столкновения и сбор
+      // Проверка столкновений (упрощённая)
+      // ...
     }
 
     // Отрисовка игры
     function draw() {
-      ctx.clearRect(0, 0, WIDTH, HEIGHT);
+      ctx.clearRect(0,0, WIDTH, HEIGHT);
       // Герой
       ctx.drawImage(arina, player.x, player.y, player.w, player.h);
-      // Рельсы (препятствия)
+      // Рельсы
       obstacles.forEach(o => ctx.drawImage(rail, o.x, o.y, o.w, o.h));
-      // Деньги (коллектиблы)
+      // Деньги
       collectibles.forEach(c => ctx.drawImage(money, c.x, c.y, c.w, c.h));
     }
 
@@ -90,7 +77,7 @@
       requestAnimationFrame(loop);
     }
 
-    // Запуск после загрузки
+    // Старт игры после загрузки ресурсов
     Promise.all([arina.decode(), rail.decode(), money.decode()]).then(loop);
   </script>
 </body>
