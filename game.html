@@ -4,78 +4,98 @@
   <meta charset="UTF-8">
   <title>Arina Run</title>
   <style>
-    body { margin: 0; overflow: hidden; background: #000; }
-    canvas { display: block; margin: 0 auto; background: #111; }
+    body { margin: 0; overflow: hidden; }
+    canvas { display: block; margin: 0 auto; background: #f0f0f0; }
   </style>
 </head>
 <body>
-  <canvas id="gameCanvas" width="800" height="400"></canvas>
+  <canvas id="gameCanvas" width="800" height="200"></canvas>
   <script>
-    // Инициализация
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
     const WIDTH = canvas.width;
     const HEIGHT = canvas.height;
+    const groundY = HEIGHT - 20;
 
     // Загрузка изображений
-    const arina = new Image(); arina.src = 'image.png';
-    const rail = new Image(); rail.src = 'pngtree-clothes-on-a-rack-buy-picture-image_13151407.png';
-    const money = new Image(); money.src = 'Dollar-Money-PNG-Image.png';
+    const arinaImg = new Image(); arinaImg.src = 'image.png';
+    const railImg = new Image(); railImg.src = 'pngtree-clothes-on-a-rack-buy-picture-image_13151407.png';
+    const moneyImg = new Image(); moneyImg.src = 'Dollar-Money-PNG-Image.png';
 
-    // Параметры героя
-    const player = { x: 50, y: HEIGHT - 80, w: 60, h: 60, vy: 0, gravity: 1.2, jumpPower: -15 };
+    // Параметры игрока
+    const player = { x: 50, y: 0, width: 50, height: 50, vy: 0, gravity: 1.5, jumpPower: -18, onGround: false };
+
     let obstacles = [];
     let collectibles = [];
     let frame = 0;
+    let score = 0;
 
-    // Обработчик прыжка
+    // Устанавливаем стартовую позицию после загрузки
+    arinaImg.onload = () => {
+      player.y = groundY - player.height;
+      loop();
+    };
+
+    // Прыжок
     document.addEventListener('keydown', e => {
-      if (e.code === 'Space' && player.y >= HEIGHT - player.h - 5) {
+      if (e.code === 'Space' && player.onGround) {
         player.vy = player.jumpPower;
+        player.onGround = false;
       }
     });
 
-    // Обновление игры
     function update() {
       frame++;
-      // Гравитация
+      // Гравитация и позиция
       player.vy += player.gravity;
-      player.y = Math.min(player.y + player.vy, HEIGHT - player.h - 5);
-
-      // Создание препятствий
-      if (frame % 120 === 0) {
-        obstacles.push({ x: WIDTH, y: HEIGHT - 70, w: 50, h: 40 });
+      player.y += player.vy;
+      if (player.y >= groundY - player.height) {
+        player.y = groundY - player.height;
+        player.vy = 0;
+        player.onGround = true;
       }
-      // Создание коллектиблов
-      if (frame % 180 === 0) {
-        collectibles.push({ x: WIDTH, y: Math.random() * 200 + 50, w: 30, h: 30 });
+      // Создание препятствий (рейлы)
+      if (frame % 90 === 0) {
+        obstacles.push({ x: WIDTH, y: groundY - 40, width: 40, height: 40 });
       }
-
-      // Сдвигаем объекты
-      obstacles = obstacles.map(o => ({ ...o, x: o.x - 4 })).filter(o => o.x + o.w > 0);
-      collectibles = collectibles.map(c => ({ ...c, x: c.x - 4 })).filter(c => c.x + c.w > 0);
+      // Создание монет
+      if (frame % 150 === 0) {
+        collectibles.push({ x: WIDTH, y: groundY - 60, width: 30, height: 30 });
+      }
+      // Движение и удаление
+      obstacles = obstacles.map(o => ({ ...o, x: o.x - 6 })).filter(o => o.x + o.width > 0);
+      collectibles = collectibles.map(c => ({ ...c, x: c.x - 6 })).filter(c => c.x + c.width > 0);
+      // Коллизии с монетами
+      collectibles = collectibles.filter(c => {
+        const hit = player.x < c.x + c.width && player.x + player.width > c.x && player.y < c.y + c.height && player.y + player.height > c.y;
+        if (hit) score++;
+        return !hit;
+      });
     }
 
-    // Отрисовка игры
     function draw() {
       ctx.clearRect(0, 0, WIDTH, HEIGHT);
-      // Герой
-      ctx.drawImage(arina, player.x, player.y, player.w, player.h);
-      // Рельсы
-      obstacles.forEach(o => ctx.drawImage(rail, o.x, o.y, o.w, o.h));
-      // Деньги
-      collectibles.forEach(c => ctx.drawImage(money, c.x, c.y, c.w, c.h));
+      // Земля
+      ctx.fillStyle = '#555';
+      ctx.fillRect(0, groundY, WIDTH, 2);
+      // Игрок
+      ctx.drawImage(arinaImg, player.x, player.y, player.width, player.height);
+      // Рейлы
+      obstacles.forEach(o => ctx.drawImage(railImg, o.x, o.y, o.width, o.height));
+      // Монеты
+      collectibles.forEach(c => ctx.drawImage(moneyImg, c.x, c.y, c.width, c.height));
+      // Счет
+      ctx.fillStyle = '#000';
+      ctx.font = '16px Arial';
+      ctx.fillText('Score: ' + score, 10, 20);
     }
 
-    // Игровой цикл
     function loop() {
       update();
       draw();
       requestAnimationFrame(loop);
     }
-
-    // Старт игры после загрузки ресурсов
-    Promise.all([arina.decode(), rail.decode(), money.decode()]).then(loop);
   </script>
 </body>
 </html>
+
