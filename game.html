@@ -4,81 +4,85 @@
   <meta charset="UTF-8">
   <title>Arina Run</title>
   <style>
-    body { margin: 0; overflow: hidden; background: #000; }
-    canvas { display: block; margin: 0 auto; background: #111; }
+    body { margin: 0; overflow: hidden; /* можно использовать фон страницы */ }
+    canvas { display: block; margin: 0 auto; background: transparent; }
+    /* Добавляем фон градиентом под canvas */
+    #game-container { width: 100vw; height: 100vh; background: linear-gradient(to top, #ffe6f0, #ffffff); display: flex; justify-content: center; align-items: center; }
   </style>
 </head>
 <body>
-  <canvas id="gameCanvas" width="800" height="400"></canvas>
+  <div id="game-container">
+    <canvas id="gameCanvas" width="800" height="400"></canvas>
+  </div>
   <script>
-    // Инициализация
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
     const WIDTH = canvas.width;
     const HEIGHT = canvas.height;
 
     // Загрузка изображений
-    const arina = new Image(); arina.src = 'image.png';
-    const rail = new Image(); rail.src = 'pngtree-clothes-on-a-rack-buy-picture-image_13151407.png';
-    const money = new Image(); money.src = 'Dollar-Money-PNG-Image.png';
+    const arinaImg = new Image(); arinaImg.src = 'image.png';
+    const railImg = new Image(); railImg.src = 'pngtree-clothes-on-a-rack-buy-picture-image_13151407.png';
+    const moneyImg = new Image(); moneyImg.src = 'Dollar-Money-PNG-Image.png';
 
-    // Параметры героя
-    const player = { x: 50, y: HEIGHT - 80, w: 60, h: 60, vy: 0, gravity: 1.2, jumpPower: -15 };
+    // Размеры препятствий и монет
+    const obstacleSize = { w: 80, h: 60 };
+    const collectibleSize = { w: 50, h: 50 };
+
+    // Параметры игрока (Arina)
+    const player = { x: 50, y: 0, vy: 0, gravity: 1.2, jumpPower: -15, height: 60 };
+
     let obstacles = [];
     let collectibles = [];
     let frame = 0;
 
-    // Обработчик прыжка
+    // При старте после загрузки определяем стартовую Y позицию Arina
+    arinaImg.onload = () => {
+      player.y = HEIGHT - arinaImg.height - 5;
+      loop();
+    };
+
     document.addEventListener('keydown', e => {
-      if (e.code === 'Space' && player.y >= HEIGHT - player.h - 5) {
+      if (e.code === 'Space' && player.y >= HEIGHT - arinaImg.height - 5) {
         player.vy = player.jumpPower;
       }
     });
 
-    // Обновление игры
     function update() {
       frame++;
-      // Применяем гравитацию
+      // Гравитация
       player.vy += player.gravity;
-      player.y = Math.min(player.y + player.vy, HEIGHT - player.h - 5);
+      player.y = Math.min(player.y + player.vy, HEIGHT - arinaImg.height - 5);
 
-      // Создание препятствий
+      // Создание препятствий каждую 120 кадр
       if (frame % 120 === 0) {
-        obstacles.push({ x: WIDTH, y: HEIGHT - 70, w: 50, h: 40 });
+        obstacles.push({ x: WIDTH, y: HEIGHT - obstacleSize.h - 5, w: obstacleSize.w, h: obstacleSize.h });
       }
-      // Создание коллектиблов
+      // Создание монет каждую 180 кадр
       if (frame % 180 === 0) {
-        collectibles.push({ x: WIDTH, y: Math.random()*200+50, w: 30, h: 30 });
+        collectibles.push({ x: WIDTH, y: Math.random() * 50 + (HEIGHT - 150), w: collectibleSize.w, h: collectibleSize.h });
       }
 
-      // Сдвигаем объекты
+      // Сдвиг объектов
       obstacles = obstacles.map(o => ({ ...o, x: o.x - 4 })).filter(o => o.x + o.w > 0);
       collectibles = collectibles.map(c => ({ ...c, x: c.x - 4 })).filter(c => c.x + c.w > 0);
-
-      // Проверка столкновений (упрощённая)
-      // ...
     }
 
-    // Отрисовка игры
     function draw() {
-      ctx.clearRect(0,0, WIDTH, HEIGHT);
-      // Герой
-      ctx.drawImage(arina, player.x, player.y, player.w, player.h);
-      // Рельсы
-      obstacles.forEach(o => ctx.drawImage(rail, o.x, o.y, o.w, o.h));
-      // Деньги
-      collectibles.forEach(c => ctx.drawImage(money, c.x, c.y, c.w, c.h));
+      ctx.clearRect(0, 0, WIDTH, HEIGHT);
+      // Рисуем Arina без изменений пропорций
+      ctx.drawImage(arinaImg, player.x, player.y);
+      // Рисуем препятствия
+      obstacles.forEach(o => ctx.drawImage(railImg, o.x, o.y, o.w, o.h));
+      // Рисуем монеты
+      collectibles.forEach(c => ctx.drawImage(moneyImg, c.x, c.y, c.w, c.h));
     }
 
-    // Игровой цикл
     function loop() {
       update();
       draw();
       requestAnimationFrame(loop);
     }
-
-    // Старт игры после загрузки ресурсов
-    Promise.all([arina.decode(), rail.decode(), money.decode()]).then(loop);
   </script>
 </body>
 </html>
