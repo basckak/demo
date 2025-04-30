@@ -4,10 +4,9 @@
   <meta charset="UTF-8">
   <title>Arina Run</title>
   <style>
-    body { margin: 0; overflow: hidden; /* можно использовать фон страницы */ }
-    canvas { display: block; margin: 0 auto; background: transparent; }
-    /* Добавляем фон градиентом под canvas */
+    body { margin: 0; overflow: hidden; }
     #game-container { width: 100vw; height: 100vh; background: linear-gradient(to top, #ffe6f0, #ffffff); display: flex; justify-content: center; align-items: center; }
+    canvas { background: transparent; }
   </style>
 </head>
 <body>
@@ -20,61 +19,63 @@
     const WIDTH = canvas.width;
     const HEIGHT = canvas.height;
 
-    // Загрузка изображений
+    // Изображения
     const arinaImg = new Image(); arinaImg.src = 'image.png';
     const railImg = new Image(); railImg.src = 'pngtree-clothes-on-a-rack-buy-picture-image_13151407.png';
     const moneyImg = new Image(); moneyImg.src = 'Dollar-Money-PNG-Image.png';
 
-    // Размеры препятствий и монет
-    const obstacleSize = { w: 80, h: 60 };
-    const collectibleSize = { w: 50, h: 50 };
-
-    // Параметры игрока (Arina)
-    const player = { x: 50, y: 0, vy: 0, gravity: 1.2, jumpPower: -15, height: 60 };
-
+    // Параметры игрока и объектов
+    let playerW, playerH;
+    const railW = 80, railH = 60;
+    const moneyW = 50, moneyH = 50;
+    const player = { x: 50, y: 0, vy: 0, gravity: 1.2, jumpPower: -15 };
     let obstacles = [];
     let collectibles = [];
     let frame = 0;
 
-    // При старте после загрузки определяем стартовую Y позицию Arina
+    // После загрузки арины задаём размеры и стартовую позицию
     arinaImg.onload = () => {
-      player.y = HEIGHT - arinaImg.height - 5;
+      const aspect = arinaImg.width / arinaImg.height;
+      playerH = 60;                  // фиксированная высота
+      playerW = playerH * aspect;    // ширина по пропорциям
+      player.y = HEIGHT - playerH - 5;
       loop();
     };
 
+    // Прыжок
     document.addEventListener('keydown', e => {
-      if (e.code === 'Space' && player.y >= HEIGHT - arinaImg.height - 5) {
+      if (e.code === 'Space' && player.y >= HEIGHT - playerH - 5) {
         player.vy = player.jumpPower;
       }
     });
 
     function update() {
       frame++;
-      // Гравитация
+      // гравитация
       player.vy += player.gravity;
-      player.y = Math.min(player.y + player.vy, HEIGHT - arinaImg.height - 5);
+      player.y = Math.min(player.y + player.vy, HEIGHT - playerH - 5);
 
-      // Создание препятствий каждую 120 кадр
+      // новые препятствия
       if (frame % 120 === 0) {
-        obstacles.push({ x: WIDTH, y: HEIGHT - obstacleSize.h - 5, w: obstacleSize.w, h: obstacleSize.h });
+        obstacles.push({ x: WIDTH, y: HEIGHT - railH - 5, w: railW, h: railH });
       }
-      // Создание монет каждую 180 кадр
+      // новые монеты чуть ниже
       if (frame % 180 === 0) {
-        collectibles.push({ x: WIDTH, y: Math.random() * 50 + (HEIGHT - 150), w: collectibleSize.w, h: collectibleSize.h });
+        collectibles.push({ x: WIDTH, y: Math.random() * 50 + (HEIGHT - 150), w: moneyW, h: moneyH });
       }
 
-      // Сдвиг объектов
-      obstacles = obstacles.map(o => ({ ...o, x: o.x - 4 })).filter(o => o.x + o.w > 0);
-      collectibles = collectibles.map(c => ({ ...c, x: c.x - 4 })).filter(c => c.x + c.w > 0);
+      // сдвиг объектов
+      obstacles = obstacles.map(o => ({ x: o.x - 4, ...o })).filter(o => o.x + o.w > 0);
+      collectibles = collectibles.map(c => ({ x: c.x - 4, ...c })).filter(c => c.x + c.w > 0);
     }
 
     function draw() {
       ctx.clearRect(0, 0, WIDTH, HEIGHT);
-      // Рисуем Arina без изменений пропорций
-      ctx.drawImage(arinaImg, player.x, player.y);
-      // Рисуем препятствия
+      // рисуем Арину с новыми размерами
+      ctx.drawImage(arinaImg, player.x, player.y, playerW, playerH);
+      // рисуем рейлы
       obstacles.forEach(o => ctx.drawImage(railImg, o.x, o.y, o.w, o.h));
-      // Рисуем монеты
+      // рисуем деньги
       collectibles.forEach(c => ctx.drawImage(moneyImg, c.x, c.y, c.w, c.h));
     }
 
