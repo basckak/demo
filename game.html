@@ -1,4 +1,6 @@
-<!DOCTYPE html>
+
+
+    <!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
@@ -23,30 +25,33 @@
     const moneyImg = new Image(); moneyImg.src = 'Dollar-Money-PNG-Image.png';
 
     // Параметры игрока
-    const player = { x: 50, y: 0, width: 50, height: 50, vy: 0, gravity: 1.5, jumpPower: -18, onGround: false };
-
+    const player = { x: 50, y: 0, vy: 0, gravity: 1.5, jumpPower: -18, onGround: false, width: 0, height: 60 };
     let obstacles = [];
     let collectibles = [];
     let frame = 0;
     let score = 0;
+    let gameOver = false;
 
-    // Устанавливаем стартовую позицию после загрузки
+    // После загрузки спрайта Арины задаём ширину по пропорции
     arinaImg.onload = () => {
+      const aspect = arinaImg.width / arinaImg.height;
+      player.width = player.height * aspect;
       player.y = groundY - player.height;
       loop();
     };
 
-    // Прыжок
+    // Обработчик прыжка
     document.addEventListener('keydown', e => {
-      if (e.code === 'Space' && player.onGround) {
+      if (e.code === 'Space' && player.onGround && !gameOver) {
         player.vy = player.jumpPower;
         player.onGround = false;
       }
     });
 
     function update() {
+      if (gameOver) return;
       frame++;
-      // Гравитация и позиция
+      // Гравитация и движение
       player.vy += player.gravity;
       player.y += player.vy;
       if (player.y >= groundY - player.height) {
@@ -54,22 +59,30 @@
         player.vy = 0;
         player.onGround = true;
       }
-      // Создание препятствий (рейлы)
+      // Генерация рейлов (препятствий)
       if (frame % 90 === 0) {
         obstacles.push({ x: WIDTH, y: groundY - 40, width: 40, height: 40 });
       }
-      // Создание монет
+      // Генерация денег
       if (frame % 150 === 0) {
         collectibles.push({ x: WIDTH, y: groundY - 60, width: 30, height: 30 });
       }
-      // Движение и удаление
+      // Движение и удаление вне экрана
       obstacles = obstacles.map(o => ({ ...o, x: o.x - 6 })).filter(o => o.x + o.width > 0);
       collectibles = collectibles.map(c => ({ ...c, x: c.x - 6 })).filter(c => c.x + c.width > 0);
-      // Коллизии с монетами
+      // Проверка столкновений с рейлами
+      for (let o of obstacles) {
+        if (player.x < o.x + o.width && player.x + player.width > o.x && player.y < o.y + o.height && player.y + player.height > o.y) {
+          gameOver = true;
+        }
+      }
+      // Сбор монет
       collectibles = collectibles.filter(c => {
-        const hit = player.x < c.x + c.width && player.x + player.width > c.x && player.y < c.y + c.height && player.y + player.height > c.y;
-        if (hit) score++;
-        return !hit;
+        if (player.x < c.x + c.width && player.x + player.width > c.x && player.y < c.y + c.height && player.y + player.height > c.y) {
+          score++;
+          return false;
+        }
+        return true;
       });
     }
 
@@ -82,12 +95,21 @@
       ctx.drawImage(arinaImg, player.x, player.y, player.width, player.height);
       // Рейлы
       obstacles.forEach(o => ctx.drawImage(railImg, o.x, o.y, o.width, o.height));
-      // Монеты
+      // Деньги
       collectibles.forEach(c => ctx.drawImage(moneyImg, c.x, c.y, c.width, c.height));
-      // Счет
+      // Счёт
       ctx.fillStyle = '#000';
       ctx.font = '16px Arial';
       ctx.fillText('Score: ' + score, 10, 20);
+      // Game Over
+      if (gameOver) {
+        ctx.fillStyle = 'rgba(0,0,0,0.5)';
+        ctx.fillRect(0, 0, WIDTH, HEIGHT);
+        ctx.fillStyle = '#fff';
+        ctx.font = '30px Arial';
+        ctx.fillText('Game Over', WIDTH/2 - 80, HEIGHT/2 - 10);
+        ctx.fillText('Score: ' + score, WIDTH/2 - 60, HEIGHT/2 + 30);
+      }
     }
 
     function loop() {
@@ -98,4 +120,3 @@
   </script>
 </body>
 </html>
-
