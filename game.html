@@ -4,162 +4,94 @@
   <meta charset="UTF-8">
   <title>Arina Run</title>
   <style>
-    body {
-      margin: 0;
-      overflow: hidden;
-      background: #ffe6f0;
-      font-family: Arial, sans-serif;
-    }
-    #game {
-      position: relative;
-      width: 100vw;
-      height: 100vh;
-      overflow: hidden;
-      background: linear-gradient(to top, #ffe6f0, #ffffff);
-    }
-    .arina {
-      position: absolute;
-      bottom: 0;
-      left: 50px;
-      width: 50px;
-      height: 50px;
-      background-image: url('image.png');
-      background-repeat: no-repeat;
-      background-position: center;
-      background-size: contain;
-    }
-    .obstacle {
-      position: absolute;
-      bottom: 0;
-      width: 40px;
-      height: 60px;
-      background-image: url('pngtree-clothes-on-a-rack-buy-picture-image_13151407.png');
-      background-repeat: no-repeat;
-      background-position: center;
-      background-size: contain;
-    }
-    .collectible {
-      position: absolute;
-      width: 30px;
-      height: 30px;
-      background-image: url('Dollar-Money-PNG-Image.png');
-      background-repeat: no-repeat;
-      background-position: center;
-      background-size: contain;
-    }
-    #score {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      font-size: 24px;
-      color: #d147a3;
-      font-weight: bold;
-    }
+    body { margin: 0; overflow: hidden; background: #000; }
+    canvas { display: block; margin: 0 auto; background: #111; }
   </style>
 </head>
 <body>
-  <div id="game">
-    <div id="score">Очки: 0</div>
-    <div class="arina" id="arina"></div>
-  </div>
-
+  <canvas id="gameCanvas" width="800" height="400"></canvas>
   <script>
-    const arina = document.getElementById('arina');
-    const game = document.getElementById('game');
-    const scoreDisplay = document.getElementById('score');
-    let score = 0;
-    let isJumping = false;
-    let gravity = 0.9;
-    let position = 0;
+    // Инициализация
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const WIDTH = canvas.width;
+    const HEIGHT = canvas.height;
 
-    function jump() {
-      if (isJumping) return;
-      isJumping = true;
-      let count = 0;
-      let upInterval = setInterval(() => {
-        if (count === 15) {
-          clearInterval(upInterval);
-          let downInterval = setInterval(() => {
-            if (count === 0) {
-              clearInterval(downInterval);
-              isJumping = false;
-            }
-            position -= 5;
-            count--;
-            position *= gravity;
-            arina.style.bottom = position + 'px';
-          }, 20);
-        }
-        position += 30;
-        count++;
-        position *= gravity;
-        arina.style.bottom = position + 'px';
-      }, 20);
+    // Загрузка изображений
+    const arina = new Image(); arina.src = 'image.png';
+    const rail = new Image(); rail.src = 'pngtree-clothes-on-a-rack-buy-picture-image_13151407.png';
+    const money = new Image(); money.src = 'Dollar-Money-PNG-Image.png';
+
+    // Размеры предметов
+    const obstacleSize = { w: 80, h: 60 };
+    const collectibleSize = { w: 50, h: 50 };
+
+    // Параметры героя
+    const player = { x: 50, y: HEIGHT - 80, w: 60, h: 60, vy: 0, gravity: 1.2, jumpPower: -15 };
+    let obstacles = [];
+    let collectibles = [];
+    let frame = 0;
+
+    // Обработчик прыжка
+    document.addEventListener('keydown', e => {
+      if (e.code === 'Space' && player.y >= HEIGHT - player.h - 5) {
+        player.vy = player.jumpPower;
+      }
+    });
+
+    // Обновление игры
+    function update() {
+      frame++;
+      // Гравитация
+      player.vy += player.gravity;
+      player.y = Math.min(player.y + player.vy, HEIGHT - player.h - 5);
+
+      // Создание препятствий
+      if (frame % 120 === 0) {
+        obstacles.push({
+          x: WIDTH,
+          y: HEIGHT - obstacleSize.h - 5,
+          w: obstacleSize.w,
+          h: obstacleSize.h
+        });
+      }
+      // Создание коллектиблов (деньги ниже)
+      if (frame % 180 === 0) {
+        collectibles.push({
+          x: WIDTH,
+          y: Math.random() * 50 + (HEIGHT - 150), // между 250 и 300
+          w: collectibleSize.w,
+          h: collectibleSize.h
+        });
+      }
+
+      // Сдвигаем объекты
+      obstacles = obstacles.map(o => ({ x: o.x - 4, ...o })).filter(o => o.x + o.w > 0);
+      collectibles = collectibles.map(c => ({ x: c.x - 4, ...c })).filter(c => c.x + c.w > 0);
+
+      // В будущем можно добавить столкновения и сбор
     }
 
-    function createObstacle() {
-      const obstacle = document.createElement('div');
-      obstacle.classList.add('obstacle');
-      let obstaclePosition = window.innerWidth;
-      obstacle.style.left = obstaclePosition + 'px';
-      game.appendChild(obstacle);
-
-      let timer = setInterval(() => {
-        if (obstaclePosition < -40) {
-          clearInterval(timer);
-          game.removeChild(obstacle);
-          score++;
-          scoreDisplay.innerText = 'Очки: ' + score;
-        }
-
-        if (
-          obstaclePosition > 50 && obstaclePosition < 100 &&
-          position < 60
-        ) {
-          clearInterval(timer);
-          document.body.innerHTML = '<h1 style="color:#d147a3; text-align:center; margin-top: 20%;">Game Over!<br>Твои очки: ' + score + '</h1>';
-        }
-
-        obstaclePosition -= 10;
-        obstacle.style.left = obstaclePosition + 'px';
-      }, 20);
+    // Отрисовка игры
+    function draw() {
+      ctx.clearRect(0, 0, WIDTH, HEIGHT);
+      // Герой
+      ctx.drawImage(arina, player.x, player.y, player.w, player.h);
+      // Рельсы (препятствия)
+      obstacles.forEach(o => ctx.drawImage(rail, o.x, o.y, o.w, o.h));
+      // Деньги (коллектиблы)
+      collectibles.forEach(c => ctx.drawImage(money, c.x, c.y, c.w, c.h));
     }
 
-    function createCollectible() {
-      const collectible = document.createElement('div');
-      collectible.classList.add('collectible');
-      let collectiblePosition = window.innerWidth;
-      let topPosition = Math.random() * (game.clientHeight - 60) + 30;
-      collectible.style.left = collectiblePosition + 'px';
-      collectible.style.top = topPosition + 'px';
-      game.appendChild(collectible);
-
-      let timer = setInterval(() => {
-        if (collectiblePosition < -30) {
-          clearInterval(timer);
-          game.removeChild(collectible);
-        }
-
-        if (
-          collectiblePosition > 50 && collectiblePosition < 100 &&
-          position > topPosition - 30
-        ) {
-          clearInterval(timer);
-          if (game.contains(collectible)) game.removeChild(collectible);
-          score += 5;
-          scoreDisplay.innerText = 'Очки: ' + score;
-        }
-
-        collectiblePosition -= 6;
-        collectible.style.left = collectiblePosition + 'px';
-      }, 20);
+    // Игровой цикл
+    function loop() {
+      update();
+      draw();
+      requestAnimationFrame(loop);
     }
 
-    document.addEventListener('keydown', (e) => { if (e.code === 'Space') jump(); });
-    document.addEventListener('touchstart', jump);
-
-    setInterval(createObstacle, 2000);
-    setInterval(createCollectible, 3500);
+    // Запуск после загрузки
+    Promise.all([arina.decode(), rail.decode(), money.decode()]).then(loop);
   </script>
 </body>
 </html>
